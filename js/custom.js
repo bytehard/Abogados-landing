@@ -1,68 +1,75 @@
 (function ($) {
-
   "use strict";
 
-    // PRE LOADER
-    $(window).load(function(){
-      $('.preloader').fadeOut(1000); // set duration in brackets    
-    });
-    
+  var WHATSAPP_NUMBER = "";
 
-    // MENU
-    $('.navbar-collapse a').on('click',function(){
-      $(".navbar-collapse").collapse('hide');
-    });
+  $(".navbar-collapse a").on("click", function () {
+    $(".navbar-collapse").collapse("hide");
+  });
 
-    $(window).scroll(function() {
-      if ($(".navbar").offset().top > 50) {
-        $(".navbar-fixed-top").addClass("top-nav-collapse");
-          } else {
-            $(".navbar-fixed-top").removeClass("top-nav-collapse");
-          }
-    });
-    
+  $(".navbar-toggle").on("click", function () {
+    $(".custom-navbar").toggleClass("nav-open");
+  });
 
-    // PARALLAX EFFECT
-    $.stellar({
-      horizontalScrolling: false,
-    }); 
+  $(window).on("scroll", function () {
+    if ($(".navbar").offset().top > 50) {
+      $(".navbar-fixed-top").addClass("top-nav-collapse");
+    } else {
+      $(".navbar-fixed-top").removeClass("top-nav-collapse");
+    }
+  });
 
+  $(".smoothScroll").on("click", function (event) {
+    var target = $(this).attr("href");
 
-    // MAGNIFIC POPUP
-    $('.image-popup').magnificPopup({
-        type: 'image',
-        removalDelay: 300,
-        mainClass: 'mfp-with-zoom',
-        gallery:{
-          enabled:true
-        },
-        zoom: {
-        enabled: true, // By default it's false, so don't forget to enable it
+    if (target && target.charAt(0) === "#" && $(target).length) {
+      $("html, body").stop().animate({
+        scrollTop: $(target).offset().top - 64
+      }, 700);
+      event.preventDefault();
+    }
+  });
 
-        duration: 300, // duration of the effect, in milliseconds
-        easing: 'ease-in-out', // CSS transition easing function
+  var today = new Date().toISOString().split("T")[0];
+  $("#booking-day").attr("min", today);
 
-        // The "opener" function should return the element from which popup will be zoomed in
-        // and to which popup will be scaled down
-        // By defailt it looks for an image tag:
-        opener: function(openerElement) {
-        // openerElement is the element on which popup was initialized, in this case its <a> tag
-        // you don't need to add "opener" option if this code matches your needs, it's defailt one.
-        return openerElement.is('img') ? openerElement : openerElement.find('img');
-        }
-      }
-    });
+  $("#reservation-form").on("submit", function (event) {
+    event.preventDefault();
 
+    var data = {
+      nombre: $("#full-name").val().trim(),
+      whatsapp: $("#whatsapp").val().trim(),
+      ciudad: $("#city").val(),
+      tema: $("#topic").val(),
+      situacion: $("#case-summary").val().trim(),
+      dia: $("#booking-day").val(),
+      hora: $("#booking-time").val()
+    };
 
-    // SMOOTH SCROLL
-    $(function() {
-      $('.custom-navbar a, #home a').on('click', function(event) {
-        var $anchor = $(this);
-          $('html, body').stop().animate({
-            scrollTop: $($anchor.attr('href')).offset().top - 49
-          }, 1000);
-            event.preventDefault();
-      });
-    });  
+    var message = [
+      "Solicitud de videollamada gratuita",
+      "",
+      "Nombre: " + data.nombre,
+      "WhatsApp: " + data.whatsapp,
+      "Ciudad: " + data.ciudad,
+      "Tema: " + data.tema,
+      "Situación: " + data.situacion,
+      "Dia: " + data.dia,
+      "Hora: " + data.hora
+    ].join("\n");
 
+    try {
+      localStorage.setItem("ultimaReservaAbogados", JSON.stringify(data));
+    } catch (error) {
+      // Local storage can be unavailable in private browsing.
+    }
+
+    if (WHATSAPP_NUMBER) {
+      window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message), "_blank");
+      $("#form-status").text("Se abrio WhatsApp para completar la reserva.");
+      return;
+    }
+
+    $("#form-status").text("Solicitud preparada. Falta configurar el número de WhatsApp o la integración de agenda para recibir reservas.");
+  });
 })(jQuery);
