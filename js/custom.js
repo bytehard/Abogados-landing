@@ -54,7 +54,7 @@
       "Ciudad: " + data.ciudad,
       "Tema: " + data.tema,
       "Situación: " + data.situacion,
-      "Dia: " + data.dia,
+      "Día: " + data.dia,
       "Hora: " + data.hora
     ].join("\n");
 
@@ -66,7 +66,7 @@
 
     if (WHATSAPP_NUMBER) {
       window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message), "_blank");
-      $("#form-status").text("Se abrio WhatsApp para completar la reserva.");
+      $("#form-status").text("Se abrió WhatsApp para completar la reserva.");
       return;
     }
 

@@ -7,7 +7,8 @@ Landing page estática para una campaña de orientación jurídica familiar grat
 - `index.html`: página principal.
 - `css/`: estilos de Bootstrap, Font Awesome y estilos propios.
 - `js/`: scripts de interacción.
-- `images/`: imágenes y fondos de la landing.
+- `images/`: imagen principal de la landing.
+- `robots.txt` y `sitemap.xml`: archivos básicos para indexación.
 
 ## Uso local
 
